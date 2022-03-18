@@ -36,9 +36,8 @@ class Faceemotion(VideoTransformerBase):
         gray = cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
 
         # Detect faces in the image
-        faces = face_detect.detectMultiScale(gray, 1.3, 5)
-        if len(faces) == 0:
-            return frame
+        faces = face_detect.detectMultiScale(gray, 1.3, 1)
+        
         for (x,y,w,h) in faces:
             cv2.rectangle(img,(x,y),(x+w,y+h),(0,255,0),2)
             roi_gray = gray[y:y+h, x:x+w]

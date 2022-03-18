@@ -65,7 +65,7 @@ def main():
       </div>
       </body>
           """
-          st.markdown(html_temp, unsafe_allow_html=True)
+  st.markdown(html_temp, unsafe_allow_html=True)
           st.header("Webcam Live Feed")
           st.write("Click on start to use webcam and detect your face emotion")
           webrtc_streamer(key="example", mode=WebRtcMode.SENDRECV, rtc_configuration=RTC_CONFIGURATION,

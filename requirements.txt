@@ -2,3 +2,4 @@ flask
 tensorflow
 opencv-python
 numpy
+streamlit_webrtc

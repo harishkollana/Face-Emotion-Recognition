@@ -1,76 +1,68 @@
-
+from flask import Flask, render_template, Response
 import cv2
 import numpy as np
-from keras.preprocessing import image
-import warnings
-warnings.filterwarnings("ignore")
-from keras.preprocessing.image import load_img, img_to_array 
-from keras.models import  load_model
-import numpy as np
-import streamlit as st
-from streamlit_webrtc import webrtc_streamer, VideoTransformerBase, RTCConfiguration, VideoProcessorBase, WebRtcMode
+from tensorflow.keras.models import model_from_json  
+from tensorflow.keras.preprocessing import image  
+
+model = model_from_json(open("fer.json", "r").read())  #load model  
+
+model.load_weights('fer.h5')                            #load weights  
+
+face_haar_cascade = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
+
+camera = cv2.VideoCapture(0)
+
+app = Flask(__name__)
 
 
-# Loading pre-trained parameters for the cascade classifier
-try:
-    face_haar_cascade = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
-    
-    # load model
-    model = load_model("Final_model_Custome_CNN.h5")
-    emotion_labels = ['Angry','Disgust','Fear','Happy','Neutral', 'Sad', 'Surprise']  # Emotion that will be predicted
-    
-except Exception:
-    st.write("Error loading cascade classifiers")
-    
-RTC_CONFIGURATION = RTCConfiguration({"iceServers": [{"urls": ["stun:stun.l.google.com:19302"]}]})
-
-class Faceemotion(VideoTransformerBase):
-    def transform(self, frame):
+def gen_frames():                                       # generate frame by frame from camera
+    while True:
+        # Capture frame by frame
+        success, frame = camera.read()
+        if not success:
+            break
+        else:
+            gray_img= cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)  
         
-        img = frame.to_ndarray(format="bgr24")
+            faces_detected = face_haar_cascade.detectMultiScale(gray_img, 1.32, 5)  
+            
         
-        face_detect = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
-        emotion_labels = ['Angry','Disgust','Fear','Happy','Neutral', 'Sad', 'Surprise']
+            for (x,y,w,h) in faces_detected:
+                
+                cv2.rectangle(frame,(x,y),(x+w,y+h),(255,0,0),thickness=7)  
+                roi_gray=gray_img[y:y+w,x:x+h]          #cropping region of interest i.e. face area from  image  
+                roi_gray=cv2.resize(roi_gray,(48,48))  
+                img_pixels = image.img_to_array(roi_gray)  
+                img_pixels = np.expand_dims(img_pixels, axis = 0)  
+                img_pixels /= 255  
         
-        # Convert the captured frame into grayscale
-        gray = cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
+                predictions = model.predict(img_pixels)  
+        
+                max_index = np.argmax(predictions[0])   #find max indexed array
+        
+                emotions = ['angry', 'disgust', 'fear', 'happy', 'sad', 'surprise', 'neutral']  
+                predicted_emotion = emotions[max_index]  
+                
+                cv2.putText(frame, predicted_emotion, (int(x), int(y)), cv2.FONT_HERSHEY_SIMPLEX, 1, (0,0,255), 2)  
+        
+            resized_img = cv2.resize(frame, (1000, 700))  
+            
+            ret, buffer = cv2.imencode('.jpg', frame)
+            
+            frame = buffer.tobytes()
+            yield (b'--frame\r\n'
+                   b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')  # concat frame one by one and show result
 
-        # Detect faces in the image
-        faces = face_cascade.detectMultiScale(
-            image=gray, scaleFactor=1.3, minNeighbors=5)
-        
-        for (x, y, w, h) in faces:
-            cv2.rectangle(img=img, pt1=(x, y), pt2=(
-                x + w, y + h), color=(255, 0, 0), thickness=2)
-            roi_gray = img_gray[y:y + h, x:x + w]
-            roi_gray = cv2.resize(roi_gray, (48, 48), interpolation=cv2.INTER_AREA)
-            if np.sum([roi_gray]) != 0:
-                roi = roi_gray.astype('float') / 255.0
-                roi = img_to_array(roi)
-                roi = np.expand_dims(roi, axis=0)
-                prediction = classifier.predict(roi)[0]
-                maxindex = int(np.argmax(prediction))
-                finalout = emotion_dict[maxindex]
-                output = str(finalout)
-            label_position = (x, y)
-            cv2.putText(img, output, label_position, cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
 
-        return img
-        
-        
+@app.route('/video_feed')
+def video_feed():
+    return Response(gen_frames(), mimetype='multipart/x-mixed-replace; boundary=frame')
 
-def main():
-    # Face Analysis Application #
-    st.title("Live Class Monitoring System")
-    st.subheader("Face Analysis")
-    st.write("This application will detect faces in the video stream and predict the emotion of the person.")
-    st.write("The prediction is based on the pre-trained model.")
-    st.write("The model is trained on the dataset of Emotion dataset.")
 
-    # WebRTC streamer
-    st.write("Click on the button below to start the stream.")
-    webrtc_streamer(key="example", mode=WebRtcMode.SENDRECV, rtc_configuration=RTC_CONFIGURATION,
-                        video_processor_factory=Faceemotion)
+@app.route('/')
+def index():
+    return render_template('index.html')
+
 
 if __name__ == '__main__':
-    main()
+    app.run(debug=True)

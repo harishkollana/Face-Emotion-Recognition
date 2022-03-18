@@ -54,12 +54,6 @@ class Faceemotion(VideoTransformerBase):
 
 return b
 
-      if cv2.waitKey(10) == ord('q'):#wait until 'q' key is pressed  
-          break  
-
-  cap.release()  
-  cv2.destroyAllWindows 
-
 def main():
   # Face Analysis Application #
   st.title("Live Class Monitoring System")

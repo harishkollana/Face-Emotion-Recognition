@@ -1,76 +1,85 @@
-import cv2
 import numpy as np
-from tensorflow.keras.models import model_from_json  
-from tensorflow.keras.preprocessing import image  
+import cv2
 import streamlit as st
+from tensorflow import keras
+from keras.models import model_from_json
+from keras.preprocessing.image import img_to_array
 from streamlit_webrtc import webrtc_streamer, VideoTransformerBase, RTCConfiguration, VideoProcessorBase, WebRtcMode
 
+
+classifier = keras.models.load_model('Final_model_Custome_CNN.h5')
+
+#load face
+try:
+    face_cascade = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
+
+    emotion_labels = ['Angry','Disgust','Fear','Happy','Neutral', 'Sad', 'Surprise']  # Emotion that will be predicted
+
+except Exception:
+    st.write("Error loading cascade classifiers")
+
+RTC_CONFIGURATION = RTCConfiguration({"iceServers": [{"urls": ["stun:stun.l.google.com:19302"]}]})
+
 class Faceemotion(VideoTransformerBase):
-  
-  #load model  
-  model = model_from_json(open("fer.json", "r").read())  
-
-  #load weights  
-  model.load_weights('fer.h5')  
-
-  RTC_CONFIGURATION = RTCConfiguration({"iceServers": [{"urls": ["stun:stun.l.google.com:19302"]}]})
+    def transform(self, frame):
+      label = []
+      img = frame.to_ndarray(format="bgr24")
+      face_cascade = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
+      emotion_labels = ['Angry','Disgust','Fear','Happy','Neutral', 'Sad', 'Surprise']
 
 
-  face_haar_cascade = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')  
+      #image gray
+      img_gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+      faces = face_cascade.detectMultiScale(
+          image=img_gray, scaleFactor=1.3, minNeighbors=1)
 
+      for (x, y, w, h) in faces:
+          a=cv2.rectangle(img=img, pt1=(x, y), pt2=(
+              x + w, y + h), color=(255, 0, 0), thickness=2)
+          roi_gray = img_gray[y:y + h, x:x + w]
+          roi_gray = cv2.resize(roi_gray, (48, 48), interpolation=cv2.INTER_AREA)
+          roi = roi_gray.astype('float')/255.0
+          roi = img_to_array(roi)
+          roi = np.expand_dims(roi,axis=0) ## reshaping the cropped face image for prediction
+          prediction = classifier.predict(roi)[0]   #Prediction
+          label=emotion_labels[prediction.argmax()]
+          label_position = (x,y)
+          b=cv2.putText(a,label,label_position,cv2.FONT_HERSHEY_SIMPLEX,1,(0,255,0),2)
+          label_position = (x, y)
 
-  cap=cv2.VideoCapture(0)  
+      return b
 
-  while True:  
-      ret,test_img=cap.read()# captures frame and returns boolean value and captured image  
-      if not ret:  
-          continue  
-      gray_img= cv2.cvtColor(test_img, cv2.COLOR_BGR2GRAY)  
-
-      faces_detected = face_haar_cascade.detectMultiScale(gray_img, 1.32, 5)  
-
-
-      for (x,y,w,h) in faces_detected:
-          print('WORKING')
-          cv2.rectangle(test_img,(x,y),(x+w,y+h),(255,0,0),thickness=7)  
-          roi_gray=gray_img[y:y+w,x:x+h]#cropping region of interest i.e. face area from  image  
-          roi_gray=cv2.resize(roi_gray,(48,48))  
-          img_pixels = image.img_to_array(roi_gray)  
-          img_pixels = np.expand_dims(img_pixels, axis = 0)  
-          img_pixels /= 255  
-
-          predictions = model.predict(img_pixels)  
-
-          #find max indexed array  
-          max_index = np.argmax(predictions[0])  
-
-          emotions = ['angry', 'disgust', 'fear', 'happy', 'sad', 'surprise', 'neutral']  
-          predicted_emotion = emotions[max_index]  
-          print(predicted_emotion)
-          cv2.putText(test_img, predicted_emotion, (int(x), int(y)), cv2.FONT_HERSHEY_SIMPLEX, 1, (0,0,255), 2)  
-
-          resized_img = cv2.resize(test_img, (1000, 700))  
-          cv2.imshow('Facial emotion analysis ',resized_img)  
-
-          
-          
 def main():
-  # Face Analysis Application #
-  st.title("Live Class Monitoring System")
-  
-  html_temp = """
-      <body style="background-color:red;">
-      <div style="background-color:teal ;padding:10px">
-      <h2 style="color:white;text-align:center;">Face Emotion Recognition WebApp</h2>
-      </div>
-      </body>
-          """
-  st.markdown(html_temp, unsafe_allow_html=True)
-  st.header("Webcam Live Feed")
-  st.write("Click on start to use webcam and detect your face emotion")
-  webrtc_streamer(key="example", mode=WebRtcMode.SENDRECV, rtc_configuration=RTC_CONFIGURATION,
-                  video_processor_factory=Faceemotion)
-        
-        
-  if __name__ == "__main__":
+    # Face Analysis Application #
+    st.markdown("<h1 style='text-align:center'>Real Time Face Emotion Detection Application</h1>", unsafe_allow_html=True)
+    
+    #add space
+    st.markdown("<br>", unsafe_allow_html=True)
+
+    #add paragraph text and position it in the center
+    st.markdown("<p style='text-align:center'>Click on start to use webcam and detect your face emotion</p>", unsafe_allow_html=True)
+    
+    #add space
+    st.markdown("<br>", unsafe_allow_html=True)
+
+    webrtc_streamer(key="example", mode=WebRtcMode.SENDRECV, rtc_configuration=RTC_CONFIGURATION,
+                        video_processor_factory=Faceemotion)
+    #add space
+    st.markdown("<br>", unsafe_allow_html=True)
+
+    #add space
+    st.markdown("<br>", unsafe_allow_html=True)
+    
+    html_temp4 = """
+    <div style="background-color:#98AFC7;padding:10px">
+      <h4 style="color:white;text-align:center;">This Application is developed by Harish using Streamlit Framework, Opencv, Tensorflow and Keras library for demonstration purpose.</h4>
+      <h4 style="color:white;text-align:center;">Thanks for Visiting</h4>
+    </div>
+    <br></br>
+    <br></br>"""                       
+
+    st.markdown(html_temp4, unsafe_allow_html=True)
+
+
+if __name__ == "__main__":
     main()

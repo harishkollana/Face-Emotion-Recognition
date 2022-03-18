@@ -52,7 +52,7 @@ class Faceemotion(VideoTransformerBase):
       resized_img = cv2.resize(test_img, (1000, 700))  
       b=cv2.imshow('Facial emotion analysis ',resized_img)  
 
-return b
+  return b
 
 def main():
   # Face Analysis Application #

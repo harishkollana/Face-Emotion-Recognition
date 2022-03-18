@@ -49,10 +49,10 @@ class Faceemotion(VideoTransformerBase):
           print(predicted_emotion)
           cv2.putText(test_img, predicted_emotion, (int(x), int(y)), cv2.FONT_HERSHEY_SIMPLEX, 1, (0,0,255), 2)  
 
-      resized_img = cv2.resize(test_img, (1000, 700))  
-      b=cv2.imshow('Facial emotion analysis ',resized_img)  
+          resized_img = cv2.resize(test_img, (1000, 700))  
+          b=cv2.imshow('Facial emotion analysis ',resized_img)  
 
-  return b
+      return b
 
 def main():
   # Face Analysis Application #

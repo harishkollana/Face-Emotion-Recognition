@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 
-from doctest import Example
 import os
 import cv2
 import numpy as np

@@ -15,7 +15,7 @@ from streamlit_webrtc import webrtc_streamer, VideoTransformerBase, RTCConfigura
 
 # Loading pre-trained parameters for the cascade classifier
 try:
-    face_haar_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
+    face_haar_cascade = cv2.CascadeClassifier("haarcascade_frontalface_default.xml")
     
     # load model
     model = load_model("Final_model_Custome_CNN.h5")
@@ -29,7 +29,7 @@ class Faceemotion(VideoTransformerBase):
     def transform(self, frame):
         label=[]
         img = frame.to_ndarray(format="bgr24")
-        face_detect = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
+        face_detect = cv2.CascadeClassifier("haarcascade_frontalface_default.xml")
         emotion_labels = ['Angry','Disgust','Fear','Happy','Neutral', 'Sad', 'Surprise']
         
         # Convert the captured frame into grayscale

@@ -9,7 +9,7 @@ What is the use and why it is important?
 
 Use of technology to help people with emotion recognition is a relatively nascent research area. Facial expressions are a form of nonverbal communication. Various studies have been done for the classification of these facial expressions. There is strong evidence for the universal facial expressions of seven emotions which include: neutral happy, sadness, anger, disgust, fear, and surprise. So it is very important to detect these emotions on the face as it has wide applications in the field of Computer Vision and Artificial Intelligence. These fields are researching on the facial emotions to get the sentiments of the humans automatically.
 
-<img src="Images/Picture1.png">
+<img src="Sample Images/deep face.png">
 
 ## Problem Statement
 The Indian education landscape has been undergoing rapid changes for the past 10 years owing to the advancement of web-based learning services, specifically, eLearning platforms.
@@ -37,7 +37,7 @@ The model is trained on the FER-2013 dataset .This dataset consists of 35887 gra
 ### Using DeepFace
 Deepface is a lightweight face recognition and facial attribute analysis (age, gender, emotion and race) framework for python. It is a hybrid face recognition framework wrapping state-of-the-art models: VGG-Face, Google FaceNet, OpenFace, Facebook DeepFace, DeepID, ArcFace and Dlib. Those models already reached and passed the human level accuracy. The library is mainly based on TensorFlow and Keras.
 
-<img src="Images/Picture2.png">
+<img src="Sample Images/deep face.png">
 
 ### Inference after using DeepFace
 Most of the emotions predicted by DeepFace model were incorrect.
@@ -60,12 +60,12 @@ and it has about 138 million (approx) parameters.
 Created a custom CNN model using Conv2D, MaxPooling, BatchNormalization, Dropout and Dense layers. Activation function used is "ReLU". Output layer has 7 nodes with activation function as "Softmax". Adam Optimizer is used in this model.
 Total params: 4,496,903
 
-<img src="Images/Picture4.jpg">
+<img src="Sample Images/Custom Cnn Model.jpg">
 
 The training accuracy obtained from this model is 66.64% and validation accuracy is 66.10% after 50 epochs. Model is performing good in live video feed.
 
 ### Loss and accuracy plot
-<img src="Images/Picture5.png">
+<img src="Sample Images/Loss and Accuracy Plot Of Model.png">
 
 ## Dependencies
 * Python-3

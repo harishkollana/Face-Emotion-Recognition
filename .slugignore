@@ -77,7 +77,5 @@ def clean_slug_dir(root):
     for pattern in get_slugignores(root):
         print("pattern", pattern)
         remove_pattern(root, pattern)
-
-
 *.ipynb
 *.webm

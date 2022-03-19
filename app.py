@@ -22,7 +22,7 @@ except Exception:
 
 RTC_CONFIGURATION = RTCConfiguration({"iceServers": [{"urls": ["stun:stun.l.google.com:19302"]}]})
 
-class Faceemotion(VideoTransformerBase):
+class Faceemotion(VideoProcessorBase):
     def transform(self, frame):
       label = []
       img = frame.to_ndarray(format="bgr24")

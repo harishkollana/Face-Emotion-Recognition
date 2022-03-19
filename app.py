@@ -6,6 +6,7 @@ from tensorflow import keras
 from keras.models import model_from_json
 from keras.preprocessing.image import img_to_array
 from streamlit_webrtc import webrtc_streamer, VideoTransformerBase, RTCConfiguration, VideoProcessorBase, WebRtcMode
+import av
 import os
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 
@@ -22,8 +23,8 @@ except Exception:
 
 RTC_CONFIGURATION = RTCConfiguration({"iceServers": [{"urls": ["stun:stun.l.google.com:19302"]}]})
 
-class Faceemotion(VideoProcessorBase):
-    def transform(self, frame):
+class VideoProcessor:
+    def recv(self, frame):
       label = []
       img = frame.to_ndarray(format="bgr24")
       face_cascade = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
@@ -65,7 +66,7 @@ def main():
     st.markdown("<br>", unsafe_allow_html=True)
 
     webrtc_streamer(key="example", mode=WebRtcMode.SENDRECV, rtc_configuration=RTC_CONFIGURATION,
-                        video_processor_factory=Faceemotion)
+                        video_processor_factory=VideoProcessor)
     #add space
     st.markdown("<br>", unsafe_allow_html=True)
 

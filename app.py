@@ -1,14 +1,11 @@
+import os
 import numpy as np
 import cv2
 import streamlit as st
-import keras
 from tensorflow import keras
 from keras.models import model_from_json
 from keras.preprocessing.image import img_to_array
 from streamlit_webrtc import webrtc_streamer, VideoTransformerBase, RTCConfiguration, VideoProcessorBase, WebRtcMode
-import av
-import os
-os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 
 classifier = keras.models.load_model('Final_model_Custome_CNN.h5')
 

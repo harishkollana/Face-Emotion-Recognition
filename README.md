@@ -28,7 +28,7 @@ Because of this drawback, students are not focusing on content due to lack of su
 
 We will solve the above-mentioned challenge by applying deep learning algorithms to live video data. The solution to this problem is by recognizing facial emotions.
 
-Presentation link - https://github.com/Aayushi-Sharma24/Face_Emotion_Recognition/blob/main/Face_Emotion_Recognition-Presentation.pdf
+Presentation link - 
 
 ## Dataset Information
 The model is trained on the FER-2013 dataset .This dataset consists of 35887 grayscale, 48x48 sized face images with seven emotions - angry, disgusted, fearful, happy, neutral, sad and surprised. Here is the dataset link:- https://www.kaggle.com/msambare/fer2013
@@ -88,4 +88,4 @@ The model created with CNN layers gave training accuracy of 66.49% and validatio
 
 Drawback- not classifying well on disgust images.
 
-Link of Demo video(working in local) - https://github.com/Aayushi-Sharma24/Face_Emotion_Recognition/blob/main/Face_Emotion_recognition-Working_Demo.mp4
+Link of Demo video(working in local) - 

@@ -88,4 +88,4 @@ The model created with CNN layers gave training accuracy of 66.49% and validatio
 
 Drawback- not classifying well on disgust images.
 
-Link of Demo video(working in local) - https://github.com/harishkollana/Face-Emotion-Recognition/blob/fbf4db2f535072ad59ab52e55cd800d9f141c948/streamlit-predict-2022-03-18-20-03-95.webm
+Link of Demo video(working in local) - https://github.com/harishkollana/Face-Emotion-Recognition/blob/34ee1b2c81d8002bc765702d1822c03404470914/streamlit-app-2022-03-20-10-03-62.mp4

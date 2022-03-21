@@ -82,7 +82,7 @@ For this project I have made a front end application using streamlit .Streamlit 
 App Link deployed on Streamlit- https://share.streamlit.io/harishkollana/face-emotion-recognition/main/app.py
 
 ## Conclusion
-Finally build a Face Emotion Recognition webapp using streamlit and deployed on Heroku, which predicts the face emotions on live webcam.
+Finally build a Face Emotion Recognition webapp using streamlit and deployed on streamlit cloud, which predicts the face emotions on live webcam.
 
 The model created with CNN layers gave training accuracy of 66.49% and validation accuracy of 66.32% after 50 epochs.
 

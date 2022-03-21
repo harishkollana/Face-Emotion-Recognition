@@ -28,7 +28,7 @@ Because of this drawback, students are not focusing on content due to lack of su
 
 We will solve the above-mentioned challenge by applying deep learning algorithms to live video data. The solution to this problem is by recognizing facial emotions.
 
-Presentation link - 
+Presentation link - https://github.com/harishkollana/Face-Emotion-Recognition/blob/3812dacb23728a6578cecf6b4b55479e8b26a0f4/Face%20Emotion%20Recognition%20Capstone%20Project%20Presentation.pdf
 
 ## Dataset Information
 The model is trained on the FER-2013 dataset .This dataset consists of 35887 grayscale, 48x48 sized face images with seven emotions - angry, disgusted, fearful, happy, neutral, sad and surprised. Here is the dataset link:- https://www.kaggle.com/msambare/fer2013
